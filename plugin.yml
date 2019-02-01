@@ -1,0 +1,6 @@
+name: ValkGen
+main: com.valkgen.ValkGen
+author: valkyrienyanko
+version: 1.0
+api-version: 1.13
+load: STARTUP
