@@ -45,8 +45,13 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	            chunk.setBlock(X, Y-1, Z, Material.DIRT);
 	            chunk.setBlock(X, Y-2, Z, Material.DIRT);
 	            chunk.setBlock(X, Y-3, Z, Material.DIRT);
-	            for (int i = Y-4; i > 0; i--)
-	                chunk.setBlock(X, i, Z, Material.STONE);
+	            for (int i = Y-4; i > 0; i--) {
+	            	if (Math.random() < 0.01) {
+	            		chunk.setBlock(X, i, Z, Material.COAL_ORE);
+	            	} else {
+	            		chunk.setBlock(X, i, Z, Material.STONE);
+	            	}
+	            }
 	            chunk.setBlock(X, 0, Z, Material.BEDROCK);
 	        }
 	    return chunk;

@@ -12,14 +12,8 @@ public class OrePopulator extends Populator {
 	@Override
 	public void populate(World world, Random random, Chunk chunk) {
 		super.populate(world, random, chunk);
-		generateOre(world, random, chunk, Material.COAL_ORE, 6, 50, 8, 7);
+		generateOre(world, random, chunk, Material.COAL_ORE, 6, 50, 8, 3);
 		generateOre(world, random, chunk, Material.DIAMOND_ORE, 50, 70, 2, 4);
-		
-		// Water pockets underground
-		generateOre(world, random, chunk, Material.WATER, 30, 70, 4, 4);
-		
-		// Lava pockets underground
-		generateOre(world, random, chunk, Material.LAVA, 60, 80, 4, 4);
 	}
 	
 	private void generateOre(World world, Random random, Chunk chunk, Material ore, int minDepth, int maxDepth, int size, int density) {
@@ -29,8 +23,9 @@ public class OrePopulator extends Populator {
 				for (int z = 0; z < new Random().nextInt(size) + 1; z++) {
 					for (int y = 0; y < new Random().nextInt(size) + 1; y++) {
 						Block b = new Location(world, loc.getX() + x, loc.getY() - y - depth, loc.getZ() + z).getBlock();
-						if (b.getType().equals(Material.STONE))
+						if (b.getType() == Material.STONE) {
 							b.setType(ore);
+						}
 					}
 				}
 			}
