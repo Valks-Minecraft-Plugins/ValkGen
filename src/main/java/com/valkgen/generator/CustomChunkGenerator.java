@@ -60,6 +60,14 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	            	}
 	            }
 	            
+	            chunk.setBlock(X, Y-32, Z, Material.AIR);
+	            chunk.setBlock(X, Y-33, Z, Material.AIR);
+	            chunk.setBlock(X, Y-34, Z, Material.AIR);
+	            chunk.setBlock(X, Y-35, Z, Material.AIR);
+	            chunk.setBlock(X, Y-36, Z, Material.AIR);
+	            chunk.setBlock(X, Y-37, Z, Material.AIR);
+	            chunk.setBlock(X, Y-38, Z, Material.AIR);
+	            chunk.setBlock(X, Y-39, Z, Material.AIR);
 	            chunk.setBlock(X, Y-40, Z, Material.LAVA);
 	            chunk.setBlock(X, Y-41, Z, Material.LAVA);
 	            chunk.setBlock(X, Y-42, Z, Material.LAVA);
