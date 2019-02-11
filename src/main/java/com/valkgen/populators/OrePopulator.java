@@ -14,6 +14,7 @@ public class OrePopulator extends Populator {
 		super.populate(world, random, chunk);
 		generateOre(world, random, chunk, Material.COAL_ORE, 6, 50, 8, 3);
 		generateOre(world, random, chunk, Material.DIAMOND_ORE, 50, 70, 2, 4);
+		generateOre(world, random, chunk, Material.EMERALD_ORE, 60, 70, 4, 4);
 	}
 	
 	private void generateOre(World world, Random random, Chunk chunk, Material ore, int minDepth, int maxDepth, int size, int density) {
