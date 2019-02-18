@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
@@ -33,14 +34,24 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
 		SimplexOctaveGenerator caveGen = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
 	    ChunkData chunk = createChunkData(world);
-	    generator.setScale(0.005D);
+		
+		generator.setScale(0.005);
 	
 	    for (int X = 0; X < 16; X++)
 	        for (int Z = 0; Z < 16; Z++) {
-	            Y = (int) (generator.noise(chunkX*16+X, chunkZ*16+Z, 0.5D, 0.5D)*25D+100D);
+	        	double dist = world.getBlockAt(chunkX * 16 + X, 0, chunkZ * 16 + Z).getLocation().distance(new Location(world, 0, 0, 0));
+	            Y = (int) (generator.noise(chunkX*16+X, chunkZ*16+Z, 0.5D + (dist / 1000), 0.9 - (dist / 1000))*25D+100D);
 	            if (Math.random() < 0.333) {
-	            	Material[] veg = {Material.GRASS, Material.FERN};
-	            	chunk.setBlock(X, Y + 1, Z, veg[new Random().nextInt(veg.length)]);
+	            	if (Math.random() < 0.01) {
+	            		if (Math.random() < 0.1) {
+	            			chunk.setBlock(X, Y + 1, Z, Material.DIAMOND_ORE);
+	            		} else {
+	            			chunk.setBlock(X, Y + 1, Z, Material.COAL_ORE);
+	            		}
+	            	} else {
+	            		Material[] veg = {Material.GRASS, Material.FERN};
+		            	chunk.setBlock(X, Y + 1, Z, veg[new Random().nextInt(veg.length)]);
+	            	}
 	            }
 	            chunk.setBlock(X, Y, Z, Material.GRASS_BLOCK);
 	            if (Math.random() < 0.0005) {
@@ -53,7 +64,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	            chunk.setBlock(X, Y-2, Z, Material.DIRT);
 	            chunk.setBlock(X, Y-3, Z, Material.DIRT);
 	            for (int i = Y-4; i > 0; i--) {
-	            	if (Math.random() < 0.01) {
+	            	if (Math.random() < 0.06) {
 	            		chunk.setBlock(X, i, Z, Material.COAL_ORE);
 	            	} else {
 	            		chunk.setBlock(X, i, Z, Material.STONE);
