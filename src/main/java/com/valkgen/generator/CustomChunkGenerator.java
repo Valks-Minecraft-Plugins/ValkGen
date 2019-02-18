@@ -16,91 +16,80 @@ import com.valkgen.populators.TreePopulator;
 
 public class CustomChunkGenerator extends ChunkGenerator {
 	List<BlockPopulator> populators = new ArrayList<BlockPopulator>();
-	
+
 	int Y = 50;
-	
+
 	public CustomChunkGenerator() {
 		populators.add(new TreePopulator());
 		populators.add(new OrePopulator());
 	}
-	
+
 	@Override
 	public List<BlockPopulator> getDefaultPopulators(World world) {
 		return populators;
 	}
-	
+
 	@Override
 	public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biome) {
 		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
 		SimplexOctaveGenerator caveGen = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
-	    ChunkData chunk = createChunkData(world);
+		ChunkData chunk = createChunkData(world);
+		//0.005
+		double distance = world.getBlockAt(chunkX * 16, 0, chunkZ * 16).getLocation().distance(new Location(world, 0, 0, 0));
+		if (distance <= 500) {
+			generator.setScale(0.00005);
+		} else if (distance > 500 && distance <= 1000) {
+			generator.setScale(0.005);
+		} else {
+			generator.setScale(0.03);
+		}
 		
-		generator.setScale(0.005);
-	
-	    for (int X = 0; X < 16; X++)
-	        for (int Z = 0; Z < 16; Z++) {
-	        	double dist = world.getBlockAt(chunkX * 16 + X, 0, chunkZ * 16 + Z).getLocation().distance(new Location(world, 0, 0, 0));
-	            Y = (int) (generator.noise(chunkX*16+X, chunkZ*16+Z, 0.5D + (dist / 1000), 0.9 - (dist / 1000))*25D+100D);
-	            if (Math.random() < 0.333) {
-	            	if (Math.random() < 0.01) {
-	            		if (Math.random() < 0.1) {
-	            			chunk.setBlock(X, Y + 1, Z, Material.DIAMOND_ORE);
-	            		} else {
-	            			chunk.setBlock(X, Y + 1, Z, Material.COAL_ORE);
-	            		}
-	            	} else {
-	            		Material[] veg = {Material.GRASS, Material.FERN};
-		            	chunk.setBlock(X, Y + 1, Z, veg[new Random().nextInt(veg.length)]);
-	            	}
-	            }
-	            chunk.setBlock(X, Y, Z, Material.GRASS_BLOCK);
-	            if (Math.random() < 0.0005) {
-	            	chunk.setBlock(X, Y-1, Z, Material.LAVA);
-	            } else if (Math.random() < 0.005){
-	            	chunk.setBlock(X, Y-1, Z, Material.WATER);
-	            } else {
-	            	chunk.setBlock(X, Y-1, Z, Material.DIRT);
-	            }
-	            chunk.setBlock(X, Y-2, Z, Material.DIRT);
-	            chunk.setBlock(X, Y-3, Z, Material.DIRT);
-	            for (int i = Y-4; i > 0; i--) {
-	            	if (Math.random() < 0.06) {
-	            		chunk.setBlock(X, i, Z, Material.COAL_ORE);
-	            	} else {
-	            		chunk.setBlock(X, i, Z, Material.STONE);
-	            	}
-	            }
-	            
-	            chunk.setBlock(X, Y-32, Z, Material.AIR);
-	            chunk.setBlock(X, Y-33, Z, Material.AIR);
-	            chunk.setBlock(X, Y-34, Z, Material.AIR);
-	            chunk.setBlock(X, Y-35, Z, Material.AIR);
-	            chunk.setBlock(X, Y-36, Z, Material.AIR);
-	            chunk.setBlock(X, Y-37, Z, Material.AIR);
-	            chunk.setBlock(X, Y-38, Z, Material.AIR);
-	            chunk.setBlock(X, Y-39, Z, Material.AIR);
-	            chunk.setBlock(X, Y-40, Z, Material.LAVA);
-	            chunk.setBlock(X, Y-41, Z, Material.LAVA);
-	            chunk.setBlock(X, Y-42, Z, Material.LAVA);
-	            chunk.setBlock(X, Y-43, Z, Material.LAVA);
-	            chunk.setBlock(X, Y-44, Z, Material.LAVA);
-	            
-	            chunk.setBlock(X, 0, Z, Material.BEDROCK);
-	        }
-	    
-	    for (int X = 0; X < 16; X++) {
-	    	for (int Z = 0; Z < 16; Z++) {
-	    		Y = (int) (caveGen.noise(chunkX*16+X, chunkZ*16+Z, 0.7D, 0.7D)*3D+20D);
-	    		chunk.setBlock(X, Y, Z, Material.AIR);
-	    		chunk.setBlock(X, Y-1, Z, Material.AIR);
-	    		chunk.setBlock(X, Y-2, Z, Material.AIR);
-	    		chunk.setBlock(X, Y-3, Z, Material.AIR);
-	    		chunk.setBlock(X, Y-4, Z, Material.AIR);
-	    		chunk.setBlock(X, Y-5, Z, Material.AIR);
-	    		chunk.setBlock(X, Y-6, Z, Material.AIR);
-	    	}
-	    }
-	    
-	    return chunk;
+		
+		for (int X = 0; X < 16; X++) {
+			for (int Z = 0; Z < 16; Z++) {
+				double dist = world.getBlockAt(chunkX * 16 + X, 0, chunkZ * 16 + Z).getLocation()
+						.distance(new Location(world, 0, 0, 0));
+				
+				Y = (int) (generator.noise(chunkX * 16 + X, chunkZ * 16 + Z, 0.5, 0.9) * 25D
+						+ 100D);
+				
+				if (dist <= 500) {
+					CustomBiome biomeGrass = new CustomBiome(chunk, X, Y, Z);
+					biomeGrass.setSurface(Material.GRASS_BLOCK);
+					biomeGrass.setVegetation(new Material[] {Material.GRASS, Material.FERN}, 0.33);
+					biomeGrass.setVegetation(new Material[] {Material.COAL_ORE}, 0.005);
+					biomeGrass.setLayer(Material.DIRT, Y - 1, Y - 4);
+					biomeGrass.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y - 5, 1);
+					biomeGrass.setLayer(Material.BEDROCK, 0, 0);
+				} else if (dist > 500 && dist <= 1000) {
+					CustomBiome biomeMycel = new CustomBiome(chunk, X, Y, Z);
+					biomeMycel.setSurface(Material.MYCELIUM);
+					biomeMycel.setLayer(Material.DIRT, Y - 1, Y - 4);
+					biomeMycel.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y - 5, 1);
+					biomeMycel.setLayer(Material.BEDROCK, 0, 0);
+				} else {
+					CustomBiome biomeSand = new CustomBiome(chunk, X, Y, Z);
+					biomeSand.setSurface(Material.SAND);
+					biomeSand.setLayer(Material.SANDSTONE, Y - 1, Y - 4);
+					biomeSand.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y - 5, 1);
+					biomeSand.setLayer(Material.BEDROCK, 0, 0);
+				}
+			}
+		}
+		
+		for (int X = 0; X < 16; X++) {
+			for (int Z = 0; Z < 16; Z++) {
+				Y = (int) (caveGen.noise(chunkX * 16 + X, chunkZ * 16 + Z, 0.7D, 0.7D) * 3D + 20D);
+				chunk.setBlock(X, Y, Z, Material.AIR);
+				chunk.setBlock(X, Y - 1, Z, Material.AIR);
+				chunk.setBlock(X, Y - 2, Z, Material.AIR);
+				chunk.setBlock(X, Y - 3, Z, Material.AIR);
+				chunk.setBlock(X, Y - 4, Z, Material.AIR);
+				chunk.setBlock(X, Y - 5, Z, Material.AIR);
+				chunk.setBlock(X, Y - 6, Z, Material.AIR);
+			}
+		}
+
+		return chunk;
 	}
 }
