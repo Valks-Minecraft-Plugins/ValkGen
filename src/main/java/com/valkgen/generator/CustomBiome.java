@@ -37,4 +37,10 @@ public class CustomBiome {
 			else
 				chunk.setBlock(X, Math.min(Y, i), Z, common);
 	}
+	
+	public void setOceanLayer(Material liquid, int high) {
+		for (int i = high; i >= 0; i--)
+			if (chunk.getType(X, i, Z) == Material.AIR)
+				chunk.setBlock(X, i, Z, liquid);
+	}
 }

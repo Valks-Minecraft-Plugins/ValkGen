@@ -17,7 +17,10 @@ import com.valkgen.populators.TreePopulator;
 public class CustomChunkGenerator extends ChunkGenerator {
 	List<BlockPopulator> populators = new ArrayList<BlockPopulator>();
 
-	int Y = 50;
+	int Y1 = 50;
+	int Y2 = 50;
+	int Y3 = 50;
+	int Y4 = 50;
 
 	public CustomChunkGenerator() {
 		populators.add(new TreePopulator());
@@ -32,61 +35,73 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	@Override
 	public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biome) {
 		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
-		SimplexOctaveGenerator caveGen = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
 		ChunkData chunk = createChunkData(world);
-		//0.005
-		double distance = world.getBlockAt(chunkX * 16, 0, chunkZ * 16).getLocation().distance(new Location(world, 0, 0, 0));
-		if (distance <= 500) {
-			generator.setScale(0.00005);
-		} else if (distance > 500 && distance <= 1000) {
-			generator.setScale(0.005);
-		} else {
-			generator.setScale(0.03);
-		}
-		
+		generator.setScale(0.005);
 		
 		for (int X = 0; X < 16; X++) {
 			for (int Z = 0; Z < 16; Z++) {
 				double dist = world.getBlockAt(chunkX * 16 + X, 0, chunkZ * 16 + Z).getLocation()
 						.distance(new Location(world, 0, 0, 0));
 				
-				Y = (int) (generator.noise(chunkX * 16 + X, chunkZ * 16 + Z, 0.5, 0.9) * 25D
-						+ 100D);
 				
-				if (dist <= 500) {
-					CustomBiome biomeGrass = new CustomBiome(chunk, X, Y, Z);
-					biomeGrass.setSurface(Material.GRASS_BLOCK);
-					biomeGrass.setVegetation(new Material[] {Material.GRASS, Material.FERN}, 0.33);
-					biomeGrass.setVegetation(new Material[] {Material.COAL_ORE}, 0.005);
-					biomeGrass.setLayer(Material.DIRT, Y - 1, Y - 4);
-					biomeGrass.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y - 5, 1);
-					biomeGrass.setLayer(Material.BEDROCK, 0, 0);
-				} else if (dist > 500 && dist <= 1000) {
-					CustomBiome biomeMycel = new CustomBiome(chunk, X, Y, Z);
-					biomeMycel.setSurface(Material.MYCELIUM);
-					biomeMycel.setLayer(Material.DIRT, Y - 1, Y - 4);
-					biomeMycel.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y - 5, 1);
-					biomeMycel.setLayer(Material.BEDROCK, 0, 0);
-				} else {
-					CustomBiome biomeSand = new CustomBiome(chunk, X, Y, Z);
-					biomeSand.setSurface(Material.SAND);
-					biomeSand.setLayer(Material.SANDSTONE, Y - 1, Y - 4);
-					biomeSand.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y - 5, 1);
-					biomeSand.setLayer(Material.BEDROCK, 0, 0);
+				if (dist <= 1000) {
+					Y1 = (int) (generator.noise(chunkX * 16 + X, chunkZ * 16 + Z, 0.0, 0.0) * 25D
+							+ 100D);
 				}
-			}
-		}
-		
-		for (int X = 0; X < 16; X++) {
-			for (int Z = 0; Z < 16; Z++) {
-				Y = (int) (caveGen.noise(chunkX * 16 + X, chunkZ * 16 + Z, 0.7D, 0.7D) * 3D + 20D);
-				chunk.setBlock(X, Y, Z, Material.AIR);
-				chunk.setBlock(X, Y - 1, Z, Material.AIR);
-				chunk.setBlock(X, Y - 2, Z, Material.AIR);
-				chunk.setBlock(X, Y - 3, Z, Material.AIR);
-				chunk.setBlock(X, Y - 4, Z, Material.AIR);
-				chunk.setBlock(X, Y - 5, Z, Material.AIR);
-				chunk.setBlock(X, Y - 6, Z, Material.AIR);
+				
+				if (dist <= 1000) {
+					generator.setScale(0.0001);
+					
+					CustomBiome biome1 = new CustomBiome(chunk, X, Y1, Z);
+					biome1.setSurface(Material.GRASS_BLOCK);
+					biome1.setVegetation(new Material[] {Material.GRASS, Material.FERN}, 0.33);
+					biome1.setVegetation(new Material[] {Material.COAL_ORE}, 0.005);
+					biome1.setLayer(Material.DIRT, Y1 - 1, Y1 - 4);
+					biome1.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y1 - 5, 1);
+					biome1.setLayer(Material.BEDROCK, 0, 0);
+				} else if (dist > 1000 && dist <= 2000) {
+					generator.setScale(0.005);
+					Y2 = (int) (generator.noise(chunkX * 16 + X, chunkZ * 16 + Z, 0.5, 0.9) * 25D
+							+ 100D);
+					
+					CustomBiome biome1 = new CustomBiome(chunk, X, Y2, Z);
+					biome1.setSurface(Material.GRASS_BLOCK);
+					biome1.setVegetation(new Material[] {Material.GRASS, Material.FERN}, 0.33);
+					biome1.setVegetation(new Material[] {Material.COAL_ORE}, 0.005);
+					biome1.setLayer(Material.DIRT, Y2 - 1, Y2 - 4);
+					biome1.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y2 - 5, 1);
+					biome1.setLayer(Material.BEDROCK, 0, 0);
+				} else if (dist > 2000 && dist <= 3000){
+					generator.setScale(0.01);
+					Y3 = (int) (generator.noise(chunkX * 16 + X, chunkZ * 16 + Z, 1, 1) * 25D
+							+ 100D);
+					
+					CustomBiome biome1 = new CustomBiome(chunk, X, Y3, Z);
+					biome1.setSurface(Material.GRASS_BLOCK);
+					biome1.setVegetation(new Material[] {Material.GRASS, Material.FERN}, 0.33);
+					biome1.setVegetation(new Material[] {Material.COAL_ORE}, 0.005);
+					biome1.setLayer(Material.DIRT, Y3 - 1, Y3 - 4);
+					biome1.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y3 - 5, 1);
+					biome1.setLayer(Material.BEDROCK, 0, 0);
+				} else {
+					generator.setScale(0.05);
+					Y4 = (int) (generator.noise(chunkX * 16 + X, chunkZ * 16 + Z, 1, 1) * 25D
+							+ 100D);
+					
+					CustomBiome biome1 = new CustomBiome(chunk, X, Y4, Z);
+					biome1.setSurface(Material.GRASS_BLOCK);
+					biome1.setVegetation(new Material[] {Material.GRASS, Material.FERN}, 0.33);
+					biome1.setVegetation(new Material[] {Material.COAL_ORE}, 0.005);
+					biome1.setLayer(Material.DIRT, Y4 - 1, Y4 - 4);
+					biome1.setOreLayer(Material.STONE, Material.COAL_ORE, 0.06, Y4 - 5, 1);
+					biome1.setLayer(Material.BEDROCK, 0, 0);
+					biome1.setOceanLayer(Material.WATER, 60);
+				}
+				
+				if (dist == 1000 - 3) {
+					for (int i = 0; i < 20; i++)
+						chunk.setBlock(X, Y1 + i, Z, Material.COBBLESTONE);
+				}
 			}
 		}
 
