@@ -24,16 +24,21 @@ public class CustomBiome {
 	public void setSurface(Material material) {
 		chunk.setBlock(X, Y, Z, material);
 	}
+	
+	public void embedSurface(Material material, double chance) {
+		if (Math.random() < chance)
+			chunk.setBlock(X, Y, Z, material);
+	}
 
 	public void setLayer(Material material, int high, int low) {
 		for (int i = high; i >= low; i--)
 			chunk.setBlock(X, Math.min(Y, i), Z, material);
 	}
 	
-	public void setOreLayer(Material common, Material ore, double chance, int high, int low) {
+	public void setOreLayer(Material common, Material[] ores, double chance, int high, int low) {
 		for (int i = high; i >= low; i--)
 			if (Math.random() < chance)
-				chunk.setBlock(X, Math.min(Y, i), Z, ore);
+				chunk.setBlock(X, Math.min(Y, i), Z, ores[new Random().nextInt(ores.length)]);
 			else
 				chunk.setBlock(X, Math.min(Y, i), Z, common);
 	}
